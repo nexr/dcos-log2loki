@@ -24,15 +24,15 @@ import (
 
 var (
 	loggingPrefix string
-	exist = false
-	dcosLogAPI string
-	logger = level.NewFilter(log.With(log.NewJSONLogger(os.Stdout), "ts", log.DefaultTimestampUTC, "caller", log.DefaultCaller),level.AllowError())
-	debug  = level.Debug(logger)
-	info   = level.Info(logger)
-	errorl = level.Error(logger)
+	exist         = false
+	dcosLogAPI    string
+	logger        = level.NewFilter(log.With(log.NewJSONLogger(os.Stdout), "ts", log.DefaultTimestampUTC, "caller", log.DefaultCaller), level.AllowError())
+	debug         = level.Debug(logger)
+	info          = level.Info(logger)
+	errorl        = level.Error(logger)
 
-	lokiURL string
-	lokiPort string
+	lokiURL        string
+	lokiPort       string
 	internalBuffer *time.Duration
 )
 
@@ -70,10 +70,10 @@ func main() {
 		bufferDuration = "5s"
 	}
 
-	d,_ := time.ParseDuration(bufferDuration)
+	d, _ := time.ParseDuration(bufferDuration)
 	internalBuffer = &d
 
-	lokiURL = fmt.Sprintf("http://loki.%s:%s/api/prom/push",dcosVipHost, lokiPort)
+	lokiURL = fmt.Sprintf("http://loki.%s:%s/api/prom/push", dcosVipHost, lokiPort)
 
 	info.Log("DC/OS Logging API", dcosLogAPI)
 	info.Log("DC/OS Logging Prefix", loggingPrefix)
@@ -96,6 +96,10 @@ func main() {
 			dat := t.DcosLog{}
 			if err := json.Unmarshal(e.Data, &dat); err != nil {
 				errorl.Log("log is unparserable", err)
+				err = dcosLogClient.SubscribeChan("messages", events)
+				if err != nil {
+					errorl.Log("message", "sse channel subscribe failed.", "level", "error")
+				}
 				continue
 			}
 
