@@ -84,6 +84,7 @@ func main() {
 	err := dcosLogClient.SubscribeChan("messages", events)
 	if err != nil {
 		errorl.Log("message", "sse channel subscribe failed.", "level", "error")
+		os.Exit(1)
 	}
 
 	ch := make(chan t.DcosLog, 1000)
@@ -99,7 +100,9 @@ func main() {
 				err = dcosLogClient.SubscribeChan("messages", events)
 				if err != nil {
 					errorl.Log("message", "sse channel subscribe failed.", "level", "error")
+					os.Exit(1)
 				}
+				info.Log("log channel re-subscribe success.", err)
 				continue
 			}
 
