@@ -106,7 +106,7 @@ func main() {
 				continue
 			}
 
-			if dat.Fields.DCOSSPACE != "" && strings.HasPrefix(dat.Fields.DCOSSPACE, loggingPrefix) {
+			if dat.Fields.DCOSSPACE != "" && strings.HasPrefix(dat.Fields.DCOSSPACE, loggingPrefix) && !strings.Contains(dat.Fields.CONTAINERID, ".check-") {
 				ch <- dat
 			}
 		}
