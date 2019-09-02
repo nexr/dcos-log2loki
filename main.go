@@ -139,10 +139,10 @@ func sendToLoki(col logCollection) {
 	body := map[string][]l.Entry{}
 
 	for _, dcosLog := range col {
-		labels := fmt.Sprintf("{agent=\"%s\", container_id=\"%s\", dcos_space=\"%s\", executor_id=\"%s\", framework_id=\"%s\", stream=\"%s\", syslog_identifier=\"%s\"}",
+		labels := fmt.Sprintf("{agent=\"%s\", container_id=\"%s\", service_name=\"%s\", executor_id=\"%s\", framework_id=\"%s\", stream=\"%s\", syslog_identifier=\"%s\"}",
 			dcosLog.Fields.AGENTID,
 			dcosLog.Fields.CONTAINERID,
-			dcosLog.Fields.DCOSSPACE,
+			strings.TrimPrefix(dcosLog.Fields.DCOSSPACE, "/"),
 			dcosLog.Fields.EXECUTORID,
 			dcosLog.Fields.FRAMEWORKID,
 			dcosLog.Fields.STREAM,
