@@ -54,9 +54,9 @@ func main() {
 		dcosLogAPI = "http://localhost:61001/system/v1/logs/v1/stream/?skip_prev=10"
 	}
 
-	dcosVipHost, exist := os.LookupEnv("FRAMEWORK_VIP_HOST")
+	dcosVipHost, exist := os.LookupEnv("LOKI_HOST")
 	if !exist {
-		errorl.Log("error", "environment variable FRAMEWORK_VIP_HOST cannot be empty")
+		errorl.Log("error", "environment variable LOKI_HOST cannot be empty")
 		os.Exit(1)
 	}
 
@@ -73,7 +73,7 @@ func main() {
 	d, _ := time.ParseDuration(bufferDuration)
 	internalBuffer = &d
 
-	lokiURL = fmt.Sprintf("http://loki.%s:%s/api/prom/push", dcosVipHost, lokiPort)
+	lokiURL = fmt.Sprintf("http://%s:%s/loki/api/v1/push", dcosVipHost, lokiPort)
 
 	info.Log("DC/OS Logging API", dcosLogAPI)
 	info.Log("DC/OS Logging Prefix", loggingPrefix)
